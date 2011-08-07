@@ -1,0 +1,38 @@
+#!/bin/sh
+
+echo
+echo _OOOOO___OOOOOO___OOOO____OOOO___O____O__OOOOOO
+echo _O____O__O_______O_______O____O__O____O__O
+echo _O____O__OOOOO____OOOO___O_______O____O__OOOOO
+echo _OOOOO___O____________O__O_______O____O__O
+echo _O___O___O_______O____O__O____O__O____O__O
+echo _O____O__OOOOOO___OOOO____OOOO____OOOO___OOOOOO
+echo
+
+mkdir /proc
+mount -t proc proc /proc
+if (grep -q break=top /proc/cmdline); then
+  echo "honoring break=top kernel arg"
+  /bin/sh
+fi
+
+mkdir /newroot
+MEMSIZE=$(free | grep 'Mem:' | awk '{ print $2 }')
+mount -t tmpfs -o size=${MEMSIZE}k tmpfs /newroot
+if (grep -q break=preunpack /proc/cmdline); then
+  echo "honoring break=preunpack kernel arg"
+  /bin/sh
+fi
+
+
+cd /newroot
+echo unpacking rootfs...
+gunzip - < /rootfs.cgz | cpio -i
+if (grep -q break=bottom /proc/cmdline); then
+  echo "honoring break=bottom kernel arg"
+  /bin/sh
+fi
+umount /proc
+
+echo running /sbin/init...
+exec switch_root -c /dev/console /newroot /sbin/init
