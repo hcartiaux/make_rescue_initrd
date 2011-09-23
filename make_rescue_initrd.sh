@@ -5,7 +5,7 @@
 # Purpose : create an initrd containing a 
 # full Debian installation 
 # Creation Date : 01-06-2011
-# Last Modified : jeu. 03 juin 2011 14:22:30 CEST
+# Last Modified : ven. 23 sept. 2011 11:09:42 CEST
 # Created By : Hyacinthe Cartiaux
 ############################################
 
@@ -33,9 +33,8 @@ PASSWORD=******
 
 SUITE=squeeze
 
-# MIRROR=http://ftp.fr.debian.org/debian
+MIRROR=http://ftp.fr.debian.org/debian
 # MIRROR=http://localhost:3142/debian
-MIRROR=http://penny.local.easy-hebergement.net:3142/debian
 
 WORK_DIR=/tmp/rescue_initrd_${ARCH} # /!\ Will be deleted
 DEBOOTSTRAP_DIR=${WORK_DIR}/root_${SUITE}_${ARCH}
